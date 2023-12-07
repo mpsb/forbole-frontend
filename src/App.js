@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import * as styles from './index.module.css';
 
@@ -8,12 +8,19 @@ export function App() {
   const [ moveState, setMoveState ] = useState(lastMoveState === "X" ? "O" : "X");
 
 
+  const initializeCell = (coordinate) => {
+    const move = coordinate[0];
+    const cell = coordinate.slice(1);
+
+    document.getElementById(cell).innerHTML = move;
+  };
+
   const onClickCell = (e) => {
     console.log("event", e.target);
     if (e.target.innerHTML !== "") {
       e.stopPropagation();
       e.preventDefault();
-      
+
       return;
     }
 
@@ -39,18 +46,28 @@ export function App() {
     if (savedGameState) {
       let savedGameStateArray = JSON.parse(savedGameState);
 
-      savedGameStateArray.push(latestMove);
-      localStorage.setItem("savedGameState", JSON.stringify(savedGameStateArray));
+      if (savedGameStateArray.length > 8) {
+        localStorage.setItem("savedGameState", JSON.stringify([latestMove]));
+      } else {
+        savedGameStateArray.push(latestMove);
+        localStorage.setItem("savedGameState", JSON.stringify(savedGameStateArray));
+      }
     } else {
       localStorage.setItem("savedGameState", JSON.stringify([latestMove]));
     }
   };
 
+  useEffect(() => {
+    const savedGameStateArray = JSON.parse(savedGameState);
+
+    savedGameStateArray.forEach((coordinate) => initializeCell(coordinate));
+  }, []);
+
   return <div className={styles.ticTacToeContainer}>
     <div className={styles.ticTacToeGrid}>
       <div className={styles.row}>
         <button className={styles.cell} onClick={onClickCell} id="c1"></button>
-        <button className={styles.cell}></button>
+        <button className={styles.cell} onClick={onClickCell} id="c2"></button>
         <button className={styles.cell}></button>
       </div>
       <div className={styles.row}>
