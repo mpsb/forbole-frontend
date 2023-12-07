@@ -1,3 +1,15 @@
+html {
+  font-family: 'Poppins', sans-serif;
+}
+
+.gameContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
 .ticTacToeContainer {
   display: flex;
   justify-content: center;
@@ -38,4 +50,13 @@
 
 .unclickable {
   cursor: default;
+}
+
+.secondaryButton {
+  background: grey;
+  padding: 10px;
+  border: 1px solid grey;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
 }
