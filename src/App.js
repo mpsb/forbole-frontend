@@ -7,6 +7,8 @@ const CELL_IDS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
 export function App() {
   const lastMoveState = localStorage.getItem("lastMoveState");
   const savedGameState = localStorage.getItem("savedGameState");
+  const savedOGameState = localStorage.getItem("savedOGameState");
+  const savedXGameState = localStorage.getItem("savedXGameState");
   const [ moveState, setMoveState ] = useState(lastMoveState === "X" ? "O" : "X");
 
   const clearCell = (cell) => {
@@ -63,11 +65,34 @@ export function App() {
     } else {
       localStorage.setItem("savedGameState", JSON.stringify([latestMove]));
     }
+
+    if (latestMove[0] === "X") {
+      let savedXGameStateArray = JSON.parse(savedXGameState);
+
+
+      if (savedXGameStateArray.length > 4) {
+        localStorage.setItem("savedXGameState", JSON.stringify([latestMove]));
+      } else {
+        savedXGameStateArray.push(latestMove);
+        localStorage.setItem("savedXGameState", JSON.stringify(savedXGameStateArray));
+      }
+    } else {
+      let savedOGameStateArray = JSON.parse(savedOGameState);
+
+      if (savedOGameStateArray.length > 4) {
+        localStorage.setItem("savedOGameState", JSON.stringify([latestMove]));
+      } else {
+        savedOGameStateArray.push(latestMove);
+        localStorage.setItem("savedOGameState", JSON.stringify(savedOGameStateArray));
+      }
+    }
   };
 
   const resetGame = () => {
     setMoveState("X");
     localStorage.setItem("savedGameState", JSON.stringify([]));
+    localStorage.setItem("savedOGameState", JSON.stringify([]));
+    localStorage.setItem("savedXGameState", JSON.stringify([]));
     localStorage.setItem("lastMoveState", "");
 
     CELL_IDS.forEach((cell) => clearCell(cell));
@@ -81,7 +106,7 @@ export function App() {
     }
   }, []);
 
-  return <>
+  return <div className={styles.gameContainer}>
     <div className={styles.ticTacToeContainer}>
       <div className={styles.ticTacToeGrid}>
         <div className={styles.row}>
@@ -100,7 +125,7 @@ export function App() {
           <button className={styles.cell} onClick={onClickCell} id="c9"></button>
         </div>
       </div>
-      <button onClick={resetGame}>Reset game</button>
     </div>
-  </>;
+    <button className={styles.secondaryButton} onClick={resetGame}>Reset game</button>
+  </div>;
 }
