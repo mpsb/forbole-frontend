@@ -84,17 +84,17 @@ export function App() {
         <div className={styles.row}>
           <button className={styles.cell} onClick={onClickCell} id="c1"></button>
           <button className={styles.cell} onClick={onClickCell} id="c2"></button>
-          <button className={styles.cell} id="c3"></button>
+          <button className={styles.cell} onClick={onClickCell} id="c3"></button>
         </div>
         <div className={styles.row}>
-          <button className={styles.cell} id="c4"></button>
-          <button className={styles.cell}id="c5"></button>
-          <button className={styles.cell} id="c6"></button>
+          <button className={styles.cell} onClick={onClickCell} id="c4"></button>
+          <button className={styles.cell} onClick={onClickCell} id="c5"></button>
+          <button className={styles.cell} onClick={onClickCell} id="c6"></button>
         </div>
         <div className={styles.row}>
-          <button className={styles.cell} id="c7"></button>
-          <button className={styles.cell} id="c8"></button>
-          <button className={styles.cell} id="c9"></button>
+          <button className={styles.cell} onClick={onClickCell} id="c7"></button>
+          <button className={styles.cell} onClick={onClickCell} id="c8"></button>
+          <button className={styles.cell} onClick={onClickCell} id="c9"></button>
         </div>
       </div>
       <button onClick={resetGame}>Reset game</button>
