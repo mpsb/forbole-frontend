@@ -1,0 +1,41 @@
+.ticTacToeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+
+.ticTacToeGrid {
+  display: inline-block;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  cursor: pointer;
+  background: 0;
+}
+
+.row .cell:first-child {
+  border-left: none;
+}
+
+.row .cell:last-child {
+  border-right: none;
+}
+
+.ticTacToeGrid .row:first-child .cell {
+  border-top: none;
+}
+
+.ticTacToeGrid .row:last-child .cell {
+  border-bottom: none;
+}
+
+.unclickable {
+  cursor: default;
+}
