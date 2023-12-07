@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 
 import * as styles from './index.module.css';
 
+const CELL_IDS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
+
 export function App() {
   const lastMoveState = localStorage.getItem("lastMoveState");
   const savedGameState = localStorage.getItem("savedGameState");
   const [ moveState, setMoveState ] = useState(lastMoveState === "X" ? "O" : "X");
 
+  const clearCell = (cell) => {
+    document.getElementById(cell).innerHTML = "";
+  }
 
   const initializeCell = (coordinate) => {
     const move = coordinate[0];
@@ -57,29 +62,42 @@ export function App() {
     }
   };
 
+  const resetGame = () => {
+    setMoveState("X");
+    localStorage.setItem("savedGameState", JSON.stringify([]));
+    localStorage.setItem("lastMoveState", "");
+
+    CELL_IDS.forEach((cell) => clearCell(cell));
+  }
+
   useEffect(() => {
     const savedGameStateArray = JSON.parse(savedGameState);
 
-    savedGameStateArray.forEach((coordinate) => initializeCell(coordinate));
+    if (savedGameStateArray.length > 0) {
+      savedGameStateArray.forEach((coordinate) => initializeCell(coordinate));
+    }
   }, []);
 
-  return <div className={styles.ticTacToeContainer}>
-    <div className={styles.ticTacToeGrid}>
-      <div className={styles.row}>
-        <button className={styles.cell} onClick={onClickCell} id="c1"></button>
-        <button className={styles.cell} onClick={onClickCell} id="c2"></button>
-        <button className={styles.cell}></button>
+  return <>
+    <div className={styles.ticTacToeContainer}>
+      <div className={styles.ticTacToeGrid}>
+        <div className={styles.row}>
+          <button className={styles.cell} onClick={onClickCell} id="c1"></button>
+          <button className={styles.cell} onClick={onClickCell} id="c2"></button>
+          <button className={styles.cell} id="c3"></button>
+        </div>
+        <div className={styles.row}>
+          <button className={styles.cell} id="c4"></button>
+          <button className={styles.cell}id="c5"></button>
+          <button className={styles.cell} id="c6"></button>
+        </div>
+        <div className={styles.row}>
+          <button className={styles.cell} id="c7"></button>
+          <button className={styles.cell} id="c8"></button>
+          <button className={styles.cell} id="c9"></button>
+        </div>
       </div>
-      <div className={styles.row}>
-        <button className={styles.cell}></button>
-        <button className={styles.cell}></button>
-        <button className={styles.cell}></button>
-      </div>
-      <div className={styles.row}>
-        <button className={styles.cell}></button>
-        <button className={styles.cell}></button>
-        <button className={styles.cell}></button>
-      </div>
+      <button onClick={resetGame}>Reset game</button>
     </div>
-  </div>;
+  </>;
 }
