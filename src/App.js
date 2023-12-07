@@ -10,7 +10,10 @@ export function App() {
   const [ moveState, setMoveState ] = useState(lastMoveState === "X" ? "O" : "X");
 
   const clearCell = (cell) => {
-    document.getElementById(cell).innerHTML = "";
+    const selectedCell = document.getElementById(cell);
+
+    selectedCell.innerHTML = "";
+    selectedCell.classList.remove(`${styles.unclickable}`);
   }
 
   const initializeCell = (coordinate) => {
