@@ -9,18 +9,22 @@ const CELL_IDS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
 export function App() {
   const aiModeState = localStorage.getItem("aiMode");
   const cellsToSelectState = localStorage.getItem("cellsToSelect");
+  const currentGameHistoryState = localStorage.getItem("currentGameHistory");
   const isAiTurnState = localStorage.getItem("isAiTurn");
   const isGameInProgressState = localStorage.getItem("isGameInProgress");
   const lastMoveState = localStorage.getItem("lastMoveState");
   const movesPlayedState = localStorage.getItem("movesPlayed");
+  const pastGamesState = localStorage.getItem("pastGames");
   const winnerFromLastMove = localStorage.getItem("winnerFromLastMove");
   const savedGameState = localStorage.getItem("savedGameState");
   const [ aiMode, setAiMode ] = useState(aiModeState ? parseInt(aiModeState) : false);
   const [ isAiTurn, setIsAiTurn ] = useState(isAiTurnState ? parseInt(isAiTurnState) : false);
   const [ cellsToSelect, setCellsToSelect ] = useState(cellsToSelectState ? JSON.parse(cellsToSelectState) : CELL_IDS);
+  const [ currentGameHistory, setCurrentGameHistory ] = useState(currentGameHistoryState ? JSON.parse(currentGameHistoryState) : { "moves": [], "winner": "" });
   const [ isGameInProgress, setIsGameInProgress ] = useState(isGameInProgressState ? true : false);
   const [ movesPlayed, setMovesPlayed ] = useState(movesPlayedState ? parseInt(movesPlayedState) : 0);
   const [ moveState, setMoveState ] = useState(lastMoveState === "X" ? "O" : "X");
+  const [ pastGames, setPastGames ] = useState(pastGamesState ? JSON.parse(pastGamesState) : []);
   const [ winner, setWinner ] = useState("");
 
   const checkWin = (gameState) => {
@@ -154,7 +158,7 @@ export function App() {
       setAiMode(false);
       localStorage.setItem("aiMode", "");
     }
-}
+  }
 
   const processGameState = (latestMove) => {
     const latestMovePosition = parseInt(latestMove.slice(2));
@@ -171,9 +175,13 @@ export function App() {
     if (winState) {
       setWinner(winState);
       setIsGameInProgress(false);
+      console.log('latestMovePlayer', latestMovePlayer);
+      setCurrentGameHistory((gameHistory) => ({ "moves": gameHistory["moves"], "winner": latestMovePlayer }));
       makeAllCellsUnclickable();
       localStorage.setItem("winnerFromLastMove", "1");
       localStorage.setItem("isGameInProgress", "");
+    } else {
+      setCurrentGameHistory((gameHistory) => ({ "moves": [...gameHistory["moves"], latestMove], "winner":"" }));
     }
   };
 
@@ -185,6 +193,7 @@ export function App() {
     localStorage.setItem("winnerFromLastMove", "");
     localStorage.setItem("movesPlayed", 0);
     localStorage.setItem("cellsToSelect", JSON.stringify(CELL_IDS));
+    localStorage.setItem("currentGameHistory", JSON.stringify({}));
 
     CELL_IDS.forEach((cell) => clearCell(cell));
 
@@ -192,7 +201,12 @@ export function App() {
     setWinner("");
     setMovesPlayed(0);
     setCellsToSelect(CELL_IDS);
+    setCurrentGameHistory({"moves": [], "winner": ""});
   }
+
+  const clearGameHistory = () => {
+    setPastGames([]);
+  };
 
   useEffect(() => {
     const savedGameStateArray = JSON.parse(savedGameState);
@@ -205,25 +219,39 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (movesPlayed >= 9 && winner === "") {
-      setIsGameInProgress(false);
-      localStorage.setItem("isGameInProgress", "");
-    }
-  }, [movesPlayed, winner]);
-
-  useEffect(() => {
-    if (isAiTurn && aiMode) {
+    if (isAiTurn && aiMode && isGameInProgress) {
       if (cellsToSelect.length < 1) {
         return;
       }
 
       const randomIndex = Math.floor(Math.random() * cellsToSelect.length);
-
       const selectedCell = cellsToSelect[randomIndex];
 
       aiClickCell(selectedCell);
     }
-  }, [isAiTurn, aiMode, cellsToSelect]);
+  }, [isAiTurn, aiMode, cellsToSelect, isGameInProgress]);
+
+  useEffect(() => {
+    console.log('currentGameHistory', currentGameHistory);
+    localStorage.setItem("currentGameHistory", JSON.stringify(currentGameHistory));
+
+    if (currentGameHistory["winner"] || movesPlayed >= 9) {
+      setPastGames((pastGames) => {
+        if (pastGames.length > 0) {
+          return [...pastGames, currentGameHistory];
+        } else {
+          return [currentGameHistory];
+        }
+      });
+
+      setIsGameInProgress(false);
+      localStorage.setItem("isGameInProgress", "");
+    }
+  }, [currentGameHistory, movesPlayed]);
+
+  useEffect(() => {
+    localStorage.setItem("pastGames", JSON.stringify(pastGames));
+  }, [pastGames]);
 
   return <div className={styles.gameContainer}>
     <h1 style={{ textAlign: 'center', marginBottom: 0 }}>The most satisfying<br/>Tic-Tac-Toe Game.</h1>
@@ -254,18 +282,12 @@ export function App() {
     <h2 style={{ marginBottom: 0 }}>Previous games</h2>
     <p style={{ margin: 0 }}>Click a game to show the moves played.</p>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: "100%" }}>
-      <Collapsible title="Game 1: X Won">
+      {pastGames.length > 0 && pastGames.map((pastGame, index) => <Collapsible title={`Game ${index + 1}: ${pastGame["winner"] != "" ? pastGame["winner"] : "No one"} won.`}>
         <ol>
-          <li>Xc5</li>
-          <li>Oc4</li>
+          {pastGame["moves"].map((move) => <li>{move}</li>)} 
         </ol>
-      </Collapsible>
-      <Collapsible title="Game 1: X Won">
-        <ol>
-          <li>Xc5</li>
-          <li>Oc4</li>
-        </ol>
-      </Collapsible>
+      </Collapsible>)}
+      <button className={styles.secondaryButton} onClick={clearGameHistory}>Clear history</button>
     </div>
   </div>;
 }
