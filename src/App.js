@@ -185,7 +185,7 @@ export function App() {
     }
   };
 
-  const resetGame = () => {
+  const resetGame = (clearCells=true) => {
     setMoveState("X");
     localStorage.setItem("savedGameState", JSON.stringify(Array(9).fill("")));
     localStorage.setItem("lastMoveState", "");
@@ -195,7 +195,9 @@ export function App() {
     localStorage.setItem("cellsToSelect", JSON.stringify(CELL_IDS));
     localStorage.setItem("currentGameHistory", JSON.stringify({}));
 
-    CELL_IDS.forEach((cell) => clearCell(cell));
+    if (clearCells) {
+      CELL_IDS.forEach((cell) => clearCell(cell));
+    }
 
     setIsGameInProgress(true);
     setWinner("");
@@ -244,8 +246,7 @@ export function App() {
         }
       });
 
-      setIsGameInProgress(false);
-      localStorage.setItem("isGameInProgress", "");
+      resetGame(false);
     }
   }, [currentGameHistory, movesPlayed]);
 
