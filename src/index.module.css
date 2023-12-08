@@ -1,3 +1,10 @@
+:root {
+  --primary-color: #009900;
+  --primary-color-hover: #006600;
+  --alert-color: #D00008;
+  --alert-color-hover: #660000;
+}
+
 html {
   font-family: 'Poppins', sans-serif;
 }
@@ -6,7 +13,7 @@ button {
   font-family: 'Poppins';
   font-size: 16px;
 }
- 
+
 .gameContainer {
   display: flex;
   flex-direction: column;
@@ -41,7 +48,7 @@ button {
 }
 
 .cell:hover {
-    background-color: grey;
+  background-color: grey;
 }
 
 .row .cell:first-child {
@@ -75,6 +82,36 @@ button {
 
 .red {
   color: #A80000;
+}
+
+.primaryButton {
+  padding: 10px;
+  border: 1px solid var(--primary-color);
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.primaryButton:hover {
+  background-color: var(--primary-color-hover);
+  border: 1px solid var(--primary-color-hover);
+}
+
+.primaryAlertButton {
+  padding: 10px;
+  border: 1px solid var(--alert-color);
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: var(--alert-color);
+  transition: all 0.3s ease;
+}
+
+.primaryAlertButton:hover {
+  background-color: var(--alert-color-hover);
+  border: 1px solid var(--alert-color-hover);
 }
 
 .secondaryButton {

@@ -7,11 +7,17 @@ import * as styles from './index.module.css';
 const CELL_IDS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
 
 export function App() {
+  const aiModeState = localStorage.getItem("aiMode");
+  const cellsToSelectState = localStorage.getItem("cellsToSelect");
+  const isAiTurnState = localStorage.getItem("isAiTurn");
   const isGameInProgressState = localStorage.getItem("isGameInProgress");
   const lastMoveState = localStorage.getItem("lastMoveState");
   const movesPlayedState = localStorage.getItem("movesPlayed");
   const winnerFromLastMove = localStorage.getItem("winnerFromLastMove");
   const savedGameState = localStorage.getItem("savedGameState");
+  const [ aiMode, setAiMode ] = useState(aiModeState ? parseInt(aiModeState) : false);
+  const [ isAiTurn, setIsAiTurn ] = useState(isAiTurnState ? parseInt(isAiTurnState) : false);
+  const [ cellsToSelect, setCellsToSelect ] = useState(cellsToSelectState ? JSON.parse(cellsToSelectState) : CELL_IDS);
   const [ isGameInProgress, setIsGameInProgress ] = useState(isGameInProgressState ? true : false);
   const [ movesPlayed, setMovesPlayed ] = useState(movesPlayedState ? parseInt(movesPlayedState) : 0);
   const [ moveState, setMoveState ] = useState(lastMoveState === "X" ? "O" : "X");
@@ -69,7 +75,7 @@ export function App() {
     CELL_IDS.forEach((coordinate) => {
       document.getElementById(coordinate).classList.add(`${styles.unclickable}`);
     })
-  }; 
+  };
 
   const onClickCell = (e) => {
     if (e.target.innerHTML !== "" && isGameInProgress || !isGameInProgress) {
@@ -88,7 +94,9 @@ export function App() {
       return newMovesPlayed;
     });
 
-    const clickedCell = document.getElementById(e.target.id); 
+    const clickedCell = document.getElementById(e.target.id);
+    setCellsToSelect((cellsToSelect) => cellsToSelect.filter(cell => cell !== e.target.id));
+
     if (moveState === "X") {
       setMoveState("O");
       clickedCell.innerHTML = "X";
@@ -104,7 +112,49 @@ export function App() {
       localStorage.setItem("lastMoveState", "O");
       processGameState("O"+e.target.id);
     }
+
+    setIsAiTurn(true);
   };
+
+  const aiClickCell = (selectedCell) => {
+    setMovesPlayed((movesPlayed) => {
+      const newMovesPlayed = movesPlayed + 1;
+      localStorage.setItem("movesPlayed", newMovesPlayed);
+
+      return newMovesPlayed;
+    });
+
+    const clickedCell = document.getElementById(selectedCell); 
+    setCellsToSelect((cellsToSelect) => cellsToSelect.filter(cell => cell !== selectedCell));
+
+    if (moveState === "X") {
+      setMoveState("O");
+      clickedCell.innerHTML = "X";
+      clickedCell.classList.add(`${styles.unclickable}`);
+      clickedCell.classList.add(`${styles.red}`);
+      localStorage.setItem("lastMoveState", "X");
+      processGameState("X"+selectedCell);
+    } else {
+      setMoveState("X");
+      clickedCell.innerHTML = "O";
+      clickedCell.classList.add(`${styles.unclickable}`);
+      clickedCell.classList.add(`${styles.blue}`);
+      localStorage.setItem("lastMoveState", "O");
+      processGameState("O"+selectedCell);
+    }
+
+    setIsAiTurn(false);
+  }
+
+  const setAIModeWithLocalStorage = (mode) => {
+    if (mode) {
+      setAiMode(true);
+      localStorage.setItem("aiMode", "1");
+    } else {
+      setAiMode(false);
+      localStorage.setItem("aiMode", "");
+    }
+}
 
   const processGameState = (latestMove) => {
     const latestMovePosition = parseInt(latestMove.slice(2));
@@ -123,6 +173,7 @@ export function App() {
       setIsGameInProgress(false);
       makeAllCellsUnclickable();
       localStorage.setItem("winnerFromLastMove", "1");
+      localStorage.setItem("isGameInProgress", "");
     }
   };
 
@@ -133,12 +184,14 @@ export function App() {
     localStorage.setItem("isGameInProgress", "1");
     localStorage.setItem("winnerFromLastMove", "");
     localStorage.setItem("movesPlayed", 0);
+    localStorage.setItem("cellsToSelect", JSON.stringify(CELL_IDS));
 
     CELL_IDS.forEach((cell) => clearCell(cell));
 
     setIsGameInProgress(true);
     setWinner("");
     setMovesPlayed(0);
+    setCellsToSelect(CELL_IDS);
   }
 
   useEffect(() => {
@@ -154,12 +207,28 @@ export function App() {
   useEffect(() => {
     if (movesPlayed >= 9 && winner === "") {
       setIsGameInProgress(false);
+      localStorage.setItem("isGameInProgress", "");
     }
   }, [movesPlayed, winner]);
+
+  useEffect(() => {
+    if (isAiTurn && aiMode) {
+      if (cellsToSelect.length < 1) {
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * cellsToSelect.length);
+
+      const selectedCell = cellsToSelect[randomIndex];
+
+      aiClickCell(selectedCell);
+    }
+  }, [isAiTurn, aiMode, cellsToSelect]);
 
   return <div className={styles.gameContainer}>
     <h1 style={{ textAlign: 'center', marginBottom: 0 }}>The most satisfying<br/>Tic-Tac-Toe Game.</h1>
     <p style={{ textAlign: 'center', margin: 0 }}>Click any of the cells to start a game.<br/>Or click below to start a game with the AI.</p>
+    {aiMode ? <button className={styles.primaryAlertButton} onClick={() => setAIModeWithLocalStorage(false)}>Stop playing with AI</button> : <button className={styles.primaryButton} onClick={() => setAIModeWithLocalStorage(true)}>Play with AI</button>}
     <div className={styles.ticTacToeContainer}>
       <div className={styles.ticTacToeGrid}>
         <div className={styles.row}>
