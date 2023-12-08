@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import Collapsible from './components/Collapsible';
+
 import * as styles from './index.module.css';
 
 const CELL_IDS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
@@ -81,7 +83,7 @@ export function App() {
     localStorage.setItem("isGameInProgress", "1");
     setMovesPlayed((movesPlayed) => {
       const newMovesPlayed = movesPlayed + 1;
-          localStorage.setItem("movesPlayed", newMovesPlayed);
+      localStorage.setItem("movesPlayed", newMovesPlayed);
 
       return newMovesPlayed;
     });
@@ -141,7 +143,7 @@ export function App() {
 
   useEffect(() => {
     const savedGameStateArray = JSON.parse(savedGameState);
-    
+
     if (!winnerFromLastMove) {
       savedGameStateArray.forEach((coordinate, index) => initializeCell(coordinate, index));
     } else {
@@ -180,5 +182,21 @@ export function App() {
     {movesPlayed >= 9 && winner === "" ? "No winner." : null}
     {!isGameInProgress && winner !== "" ? <p style={{ textAlign: 'center' }}>{`${winner} has won.`}</p> : null}
     <button className={styles.secondaryButton} onClick={resetGame}>{isGameInProgress ? "Reset game" : "Play again"}</button>
+    <h2 style={{ marginBottom: 0 }}>Previous games</h2>
+    <p style={{ margin: 0 }}>Click a game to show the moves played.</p>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: "100%" }}>
+      <Collapsible title="Game 1: X Won">
+        <ol>
+          <li>Xc5</li>
+          <li>Oc4</li>
+        </ol>
+      </Collapsible>
+      <Collapsible title="Game 1: X Won">
+        <ol>
+          <li>Xc5</li>
+          <li>Oc4</li>
+        </ol>
+      </Collapsible>
+    </div>
   </div>;
 }

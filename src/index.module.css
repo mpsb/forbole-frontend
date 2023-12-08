@@ -6,7 +6,7 @@ button {
   font-family: 'Poppins';
   font-size: 16px;
 }
-
+ 
 .gameContainer {
   display: flex;
   flex-direction: column;

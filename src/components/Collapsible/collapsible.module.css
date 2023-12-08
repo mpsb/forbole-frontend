@@ -1,0 +1,42 @@
+.collapsible {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  max-width: 300px;
+  width: 100%;
+}
+
+.collapsibleHeader {
+  display: flex;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+
+.collapsibleHeader h2 {
+  margin: 0;
+}
+
+.arrowDown:before,
+.arrowRight:before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #333;
+  border-right: 2px solid #333;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease-in-out;
+  margin-right: 0.5rem;
+}
+
+.arrowDown:before {
+  transform: rotate(135deg);
+}
+
+.collapsibleContent {
+  padding: 1rem;
+}
