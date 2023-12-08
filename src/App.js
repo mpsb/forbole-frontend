@@ -16,13 +16,18 @@ export function App() {
 
     selectedCell.innerHTML = "";
     selectedCell.classList.remove(`${styles.unclickable}`);
+    selectedCell.classList.remove(`${styles.red}`);
+    selectedCell.classList.remove(`${styles.blue}`);
   }
 
   const initializeCell = (coordinate) => {
     const move = coordinate[0];
     const cell = coordinate.slice(1);
+    const selectedCellElement = document.getElementById(cell);
 
-    document.getElementById(cell).innerHTML = move;
+    selectedCellElement.innerHTML = move;
+    selectedCellElement.classList.add(`${styles.unclickable}`);
+    selectedCellElement.classList.add(`${move === "X" ? styles.red : styles.blue}`);
   };
 
   const onClickCell = (e) => {
@@ -39,12 +44,14 @@ export function App() {
       setMoveState("O");
       clickedCell.innerHTML = "X";
       clickedCell.classList.add(`${styles.unclickable}`);
+      clickedCell.classList.add(`${styles.red}`);
       localStorage.setItem("lastMoveState", "X");
       processGameState("X"+e.target.id);
     } else {
       setMoveState("X");
       clickedCell.innerHTML = "O";
       clickedCell.classList.add(`${styles.unclickable}`);
+      clickedCell.classList.add(`${styles.blue}`);
       localStorage.setItem("lastMoveState", "O");
       processGameState("O"+e.target.id);
     }

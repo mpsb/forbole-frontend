@@ -2,6 +2,10 @@ html {
   font-family: 'Poppins', sans-serif;
 }
 
+button {
+  font-size: 16px;
+}
+
 .gameContainer {
   display: flex;
   flex-direction: column;
@@ -29,7 +33,14 @@ html {
   height: 100px;
   border: 1px solid black;
   cursor: pointer;
-  background: 0;
+  background-color: lightgrey;
+  font-size: 20px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.cell:hover {
+    background-color: grey;
 }
 
 .row .cell:first-child {
@@ -50,13 +61,32 @@ html {
 
 .unclickable {
   cursor: default;
+  background-color: transparent;
+}
+
+.unclickable:hover {
+  background-color: transparent;
+}
+
+.blue {
+  color: #000066;
+}
+
+.red {
+  color: #A80000;
 }
 
 .secondaryButton {
-  background: grey;
   padding: 10px;
   border: 1px solid grey;
   color: white;
   border-radius: 10px;
   cursor: pointer;
+  background-color: grey;
+  transition: all 0.3s ease;
+}
+
+.secondaryButton:hover {
+  background-color: darkgrey;
+  border: 1px solid darkgrey;
 }
