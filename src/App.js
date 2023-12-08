@@ -176,12 +176,12 @@ export function App() {
       setWinner(winState);
       setIsGameInProgress(false);
       console.log('latestMovePlayer', latestMovePlayer);
-      setCurrentGameHistory((gameHistory) => ({ "moves": gameHistory["moves"], "winner": latestMovePlayer }));
+      setCurrentGameHistory((gameHistory) => ({ "moves": [...gameHistory["moves"], latestMove], "winner": latestMovePlayer }));
       makeAllCellsUnclickable();
       localStorage.setItem("winnerFromLastMove", "1");
       localStorage.setItem("isGameInProgress", "");
     } else {
-      setCurrentGameHistory((gameHistory) => ({ "moves": [...gameHistory["moves"], latestMove], "winner":"" }));
+      setCurrentGameHistory((gameHistory) => ({ "moves": [...gameHistory["moves"], latestMove], "winner": "" }));
     }
   };
 
