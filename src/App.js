@@ -5,10 +5,12 @@ import * as styles from './index.module.css';
 const CELL_IDS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
 
 export function App() {
+  const isGameEndedState = localStorage.getItem("isGameEnded");
   const lastMoveState = localStorage.getItem("lastMoveState");
   const savedGameState = localStorage.getItem("savedGameState");
   const savedOGameState = localStorage.getItem("savedOGameState");
   const savedXGameState = localStorage.getItem("savedXGameState");
+  const [ isGameEnded, setIsGameEnded ] = useState(isGameEndedState ? true : false);
   const [ moveState, setMoveState ] = useState(lastMoveState === "X" ? "O" : "X");
 
   const clearCell = (cell) => {
@@ -39,6 +41,9 @@ export function App() {
       return;
     }
 
+    setIsGameEnded(false);
+    localStorage.setItem("isGameEnded", "");
+    
     const clickedCell = document.getElementById(e.target.id); 
     if (moveState === "X") {
       setMoveState("O");
@@ -101,8 +106,11 @@ export function App() {
     localStorage.setItem("savedOGameState", JSON.stringify([]));
     localStorage.setItem("savedXGameState", JSON.stringify([]));
     localStorage.setItem("lastMoveState", "");
+    localStorage.setItem("isGameEnded", "1");
 
     CELL_IDS.forEach((cell) => clearCell(cell));
+
+    setIsGameEnded(true);
   }
 
   useEffect(() => {
@@ -114,6 +122,8 @@ export function App() {
   }, []);
 
   return <div className={styles.gameContainer}>
+    <h1 style={{ textAlign: 'center', marginBottom: 0 }}>The most satisfying<br/>Tic-Tac-Toe Game</h1>
+    <p style={{ textAlign: 'center', margin: 0 }}>Click any of the cells to start a game.<br/>Or click below to start a game with the AI.</p>
     <div className={styles.ticTacToeContainer}>
       <div className={styles.ticTacToeGrid}>
         <div className={styles.row}>
@@ -133,6 +143,6 @@ export function App() {
         </div>
       </div>
     </div>
-    <button className={styles.secondaryButton} onClick={resetGame}>Reset game</button>
+    {isGameEnded ? null : <button className={styles.secondaryButton} onClick={resetGame}>Reset game</button>}
   </div>;
 }
