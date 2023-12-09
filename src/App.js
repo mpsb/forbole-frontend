@@ -82,8 +82,9 @@ export function App() {
   };
 
   const onClickCell = (e) => {
-    console.log("!isGameInProgress", !isGameInProgress);
-    if (e.target.innerHTML !== "" && isGameInProgress || !isGameInProgress) {
+    const currentIsGameInProgress = localStorage.getItem("isGameInProgress");
+    console.log("currentIsGameInProgress", currentIsGameInProgress);
+    if (e.target.innerHTML !== "" && currentIsGameInProgress || !currentIsGameInProgress) {
       e.stopPropagation();
       e.preventDefault();
 
@@ -173,6 +174,7 @@ export function App() {
     const winState = checkWin(savedGameStateArray); 
 
     if (winState) {
+      console.log("WIN!", winState);
       setWinner(winState);
       setIsGameInProgress(false);
       console.log('latestMovePlayer', latestMovePlayer);
@@ -182,32 +184,35 @@ export function App() {
       localStorage.setItem("isGameInProgress", "");
     } else {
       setCurrentGameHistory((gameHistory) => ({ "moves": [...gameHistory["moves"], latestMove], "winner": "" }));
-      
+
       if (currentPlayer === "player") {
         setIsAiTurn(true);
       }
     }
   };
 
-  const resetGame = (clearCells=true) => {
-    setMoveState("X");
-    localStorage.setItem("savedGameState", JSON.stringify(Array(9).fill("")));
-    localStorage.setItem("lastMoveState", "");
-    localStorage.setItem("isGameInProgress", "1");
-    localStorage.setItem("winnerFromLastMove", "");
-    localStorage.setItem("movesPlayed", 0);
-    localStorage.setItem("cellsToSelect", JSON.stringify(CELL_IDS));
-    localStorage.setItem("currentGameHistory", JSON.stringify({}));
+  const resetGame = (endGame=false) => {
+    console.log("endGame", endGame);
+    if (endGame) {
+      return;
+    } else {
+      setMoveState("X");
+      localStorage.setItem("savedGameState", JSON.stringify(Array(9).fill("")));
+      localStorage.setItem("lastMoveState", "");
+      localStorage.setItem("winnerFromLastMove", "");
+      localStorage.setItem("movesPlayed", 0);
+      localStorage.setItem("cellsToSelect", JSON.stringify(CELL_IDS));
+      localStorage.setItem("currentGameHistory", JSON.stringify({}));
+      localStorage.setItem("isGameInProgress", "1");
 
-    if (clearCells) {
       CELL_IDS.forEach((cell) => clearCell(cell));
-    }
 
-    setIsGameInProgress(true);
-    setWinner("");
-    setMovesPlayed(0);
-    setCellsToSelect(CELL_IDS);
-    setCurrentGameHistory({"moves": [], "winner": ""});
+      setIsGameInProgress(true);
+      setWinner("");
+      setMovesPlayed(0);
+      setCellsToSelect(CELL_IDS);
+      setCurrentGameHistory({"moves": [], "winner": ""});
+    }
   }
 
   const clearGameHistory = () => {
@@ -217,11 +222,14 @@ export function App() {
   useEffect(() => {
     const savedGameStateArray = JSON.parse(savedGameState);
 
-    if (!winnerFromLastMove) {
+    if (!winnerFromLastMove && savedGameStateArray) {
       savedGameStateArray.forEach((coordinate, index) => initializeCell(coordinate, index));
     } else {
       resetGame();
     }
+
+    setIsGameInProgress(true);
+    localStorage.setItem("isGameInProgress", "1");
   }, []);
 
   useEffect(() => {
@@ -250,13 +258,16 @@ export function App() {
         }
       });
 
-      resetGame(false);
+      resetGame(true);
     }
   }, [currentGameHistory, movesPlayed]);
 
   useEffect(() => {
     localStorage.setItem("pastGames", JSON.stringify(pastGames));
   }, [pastGames]);
+
+  console.log("isGameInProgress", isGameInProgress);
+  console.log("winner", winner);
 
   return <div className={styles.gameContainer}>
     <h1 style={{ textAlign: 'center', marginBottom: 0 }}>The most satisfying<br/>Tic-Tac-Toe Game.</h1>
@@ -283,7 +294,7 @@ export function App() {
     </div>
     {movesPlayed >= 9 && winner === "" ? "No winner." : null}
     {!isGameInProgress && winner !== "" ? <p style={{ textAlign: 'center' }}>{`${winner} has won.`}</p> : null}
-    <button className={styles.secondaryButton} onClick={resetGame}>{isGameInProgress ? "Reset game" : "Play again"}</button>
+    <button className={styles.secondaryButton} onClick={() => resetGame()}>{isGameInProgress ? "Reset game" : "Play again"}</button>
     <h2 style={{ marginBottom: 0 }}>Previous games</h2>
     <p style={{ margin: 0 }}>Click a game to show the moves played.</p>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: "100%" }}>
