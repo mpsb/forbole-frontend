@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import Collapsible from './components/Collapsible';
 
@@ -82,6 +82,7 @@ export function App() {
   };
 
   const onClickCell = (e) => {
+    console.log("!isGameInProgress", !isGameInProgress);
     if (e.target.innerHTML !== "" && isGameInProgress || !isGameInProgress) {
       e.stopPropagation();
       e.preventDefault();
@@ -117,7 +118,6 @@ export function App() {
       processGameState("O"+e.target.id);
     }
 
-    setIsAiTurn(true);
   };
 
   const aiClickCell = (selectedCell) => {
@@ -137,14 +137,14 @@ export function App() {
       clickedCell.classList.add(`${styles.unclickable}`);
       clickedCell.classList.add(`${styles.red}`);
       localStorage.setItem("lastMoveState", "X");
-      processGameState("X"+selectedCell);
+      processGameState("X"+selectedCell, "AI");
     } else {
       setMoveState("X");
       clickedCell.innerHTML = "O";
       clickedCell.classList.add(`${styles.unclickable}`);
       clickedCell.classList.add(`${styles.blue}`);
       localStorage.setItem("lastMoveState", "O");
-      processGameState("O"+selectedCell);
+      processGameState("O"+selectedCell, "AI");
     }
 
     setIsAiTurn(false);
@@ -160,7 +160,7 @@ export function App() {
     }
   }
 
-  const processGameState = (latestMove) => {
+  const processGameState = (latestMove, currentPlayer="player") => {
     const latestMovePosition = parseInt(latestMove.slice(2));
     const latestMovePlayer = latestMove[0];
 
@@ -182,6 +182,10 @@ export function App() {
       localStorage.setItem("isGameInProgress", "");
     } else {
       setCurrentGameHistory((gameHistory) => ({ "moves": [...gameHistory["moves"], latestMove], "winner": "" }));
+      
+      if (currentPlayer === "player") {
+        setIsAiTurn(true);
+      }
     }
   };
 
@@ -221,7 +225,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (isAiTurn && aiMode && isGameInProgress) {
+    if (isAiTurn && aiMode && !winner) {
       if (cellsToSelect.length < 1) {
         return;
       }
@@ -231,7 +235,7 @@ export function App() {
 
       aiClickCell(selectedCell);
     }
-  }, [isAiTurn, aiMode, cellsToSelect, isGameInProgress]);
+  }, [isAiTurn, aiMode, cellsToSelect, winner]);
 
   useEffect(() => {
     console.log('currentGameHistory', currentGameHistory);
