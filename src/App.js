@@ -301,9 +301,9 @@ export function App() {
     <h2 style={{ marginBottom: 0 }}>Previous games</h2>
     <p style={{ margin: 0 }}>Click a game to show the moves played.</p>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: "100%" }}>
-      {pastGames.length > 0 && pastGames.map((pastGame, index) => <Collapsible title={`Game ${index + 1}: ${pastGame["winner"] != "" ? pastGame["winner"] : "No one"} won.`}>
+      {pastGames.length > 0 && pastGames.map((pastGame, index) => <Collapsible title={`Game ${index + 1}: ${pastGame["winner"] != "" ? pastGame["winner"] : "No one"} won.`} key={`pastgame-${index}`}>
         <ol>
-          {pastGame["moves"].map((move) => <li>{move}</li>)} 
+          {pastGame["moves"].map((move, moveIndex) => <li key={`pastgame-li-${moveIndex}`}>{move}</li>)} 
         </ol>
       </Collapsible>)}
       <button className={styles.secondaryButton} onClick={clearGameHistory}>Clear history</button>
