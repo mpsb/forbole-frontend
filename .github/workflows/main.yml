@@ -22,3 +22,5 @@ jobs:
         run: npm install
       - name: Run jest tests
         run: npm run test
+      - name: Run Cypress tests
+        run: npm run cy:test
