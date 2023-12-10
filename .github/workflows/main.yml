@@ -1,0 +1,22 @@
+name: Tests
+
+on: push
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
+  jest:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install other dependencies for jest
+        run: npm install
+      - name: Run jest tests
+        run: npm run test
