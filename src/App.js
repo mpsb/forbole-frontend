@@ -83,7 +83,6 @@ export function App() {
 
   const onClickCell = (e) => {
     const currentIsGameInProgress = localStorage.getItem("isGameInProgress");
-    console.log("currentIsGameInProgress", currentIsGameInProgress);
     if (e.target.innerHTML !== "" && currentIsGameInProgress || !currentIsGameInProgress) {
       e.stopPropagation();
       e.preventDefault();
@@ -174,10 +173,8 @@ export function App() {
     const winState = checkWin(savedGameStateArray); 
 
     if (winState) {
-      console.log("WIN!", winState);
       setWinner(winState);
       setIsGameInProgress(false);
-      console.log('latestMovePlayer', latestMovePlayer);
       setCurrentGameHistory((gameHistory) => ({ "moves": [...gameHistory["moves"], latestMove], "winner": latestMovePlayer }));
       makeAllCellsUnclickable();
       localStorage.setItem("winnerFromLastMove", "1");
@@ -192,8 +189,6 @@ export function App() {
   };
 
   const resetGame = (endGame=false) => {
-    console.log("endGame", endGame);
-
     setMoveState("X");
     localStorage.setItem("savedGameState", JSON.stringify(Array(9).fill("")));
     localStorage.setItem("lastMoveState", "");
@@ -250,10 +245,8 @@ export function App() {
   }, [isAiTurn, aiMode, cellsToSelect, winner]);
 
   useEffect(() => {
-    console.log('currentGameHistory', currentGameHistory);
     localStorage.setItem("currentGameHistory", JSON.stringify(currentGameHistory));
 
-    console.log("add to pastgames condition", winner || movesPlayed >= 9);
     if (winner || movesPlayed >= 9) {
       setPastGames((pastGames) => {
         if (pastGames.length > 0) {
@@ -271,8 +264,6 @@ export function App() {
     localStorage.setItem("pastGames", JSON.stringify(pastGames));
   }, [pastGames]);
 
-  console.log("isGameInProgress", isGameInProgress);
-  console.log("winner", winner);
 
   return <div className={styles.gameContainer}>
     <h1 style={{ textAlign: 'center', marginBottom: 0 }}>The most satisfying<br/>Tic-Tac-Toe Game.</h1>
