@@ -11,7 +11,7 @@ export const checkWin = (gameState) => {
   ];
 
   const cells = gameState;
-  let winner;
+  let winner = null;
 
   for (const combination of winningCombinations) {
     const [a, b, c] = combination;
