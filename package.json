@@ -6,7 +6,8 @@
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build",
-    "test": "jest"
+    "test": "jest",
+    "cy:test": "npx cypress run --spec './cypress/e2e/game.spec.cy.js'"
   },
   "repository": {
     "type": "git",
