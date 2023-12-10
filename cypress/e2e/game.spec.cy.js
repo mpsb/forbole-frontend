@@ -110,6 +110,44 @@ describe('Check if game cells are reset correctly when game is reset.', () => {
   });
 });
 
+describe('Check if game state is correct when a player wins.', () => {
+  it('simulates a PvP game with a winner, and checks if game history is correctly added.', () => {
+    cy.visit('http://localhost:1234');
+    cy.get('#c1').click();
+    cy.get('#c1').should(($element) => {
+      expect($element.html()).to.eq('X');
+    });
+    cy.get('#c5').click();
+    cy.get('#c5').should(($element) => {
+      expect($element.html()).to.eq('O');
+    });
+    cy.get('#c4').click();
+    cy.get('#c4').should(($element) => {
+      expect($element.html()).to.eq('X');
+    });
+    cy.get('#c6').click();
+    cy.get('#c6').should(($element) => {
+      expect($element.html()).to.eq('O');
+    });
+    cy.get('#c7').click();
+    cy.get('#c7').should(($element) => {
+      expect($element.html()).to.eq('X');
+    });
+    cy.contains('h3', 'Game 1: X won.').should('be.visible').click();
+    cy.contains('h3', 'Game 1: X won.')
+      .parent().parent() 
+      .find('ol')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('li', 'Xc1');
+        cy.contains('li', 'Oc5');
+        cy.contains('li', 'Xc4');
+        cy.contains('li', 'Oc6');
+        cy.contains('li', 'Xc7');
+      });
+  });
+});
+
 describe('Check if a game is added to game history properly.', () => {
   it('plays a PvP game and checks if a game has been added to history.', () => {
     cy.visit('http://localhost:1234');
