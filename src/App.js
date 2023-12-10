@@ -193,25 +193,29 @@ export function App() {
 
   const resetGame = (endGame=false) => {
     console.log("endGame", endGame);
+
+    setMoveState("X");
+    localStorage.setItem("savedGameState", JSON.stringify(Array(9).fill("")));
+    localStorage.setItem("lastMoveState", "");
+    localStorage.setItem("winnerFromLastMove", "");
+    localStorage.setItem("movesPlayed", 0);
+    localStorage.setItem("cellsToSelect", JSON.stringify(CELL_IDS));
+    localStorage.setItem("currentGameHistory", JSON.stringify({}));
+
+    setWinner("");
+    setMovesPlayed(0);
+    setCellsToSelect(CELL_IDS);
+    setCurrentGameHistory({"moves": [], "winner": ""});
+
     if (endGame) {
+      localStorage.setItem("isGameInProgress", "");
+      setIsGameInProgress(false);
       return;
     } else {
-      setMoveState("X");
-      localStorage.setItem("savedGameState", JSON.stringify(Array(9).fill("")));
-      localStorage.setItem("lastMoveState", "");
-      localStorage.setItem("winnerFromLastMove", "");
-      localStorage.setItem("movesPlayed", 0);
-      localStorage.setItem("cellsToSelect", JSON.stringify(CELL_IDS));
-      localStorage.setItem("currentGameHistory", JSON.stringify({}));
-      localStorage.setItem("isGameInProgress", "1");
-
       CELL_IDS.forEach((cell) => clearCell(cell));
 
+      localStorage.setItem("isGameInProgress", "1");
       setIsGameInProgress(true);
-      setWinner("");
-      setMovesPlayed(0);
-      setCellsToSelect(CELL_IDS);
-      setCurrentGameHistory({"moves": [], "winner": ""});
     }
   }
 
@@ -222,7 +226,7 @@ export function App() {
   useEffect(() => {
     const savedGameStateArray = JSON.parse(savedGameState);
 
-    if (!winnerFromLastMove && savedGameStateArray) {
+    if (savedGameStateArray && savedGameStateArray.includes("") && !winnerFromLastMove) {
       savedGameStateArray.forEach((coordinate, index) => initializeCell(coordinate, index));
     } else {
       resetGame();
@@ -249,7 +253,8 @@ export function App() {
     console.log('currentGameHistory', currentGameHistory);
     localStorage.setItem("currentGameHistory", JSON.stringify(currentGameHistory));
 
-    if (currentGameHistory["winner"] || movesPlayed >= 9) {
+    console.log("add to pastgames condition", winner || movesPlayed >= 9);
+    if (winner || movesPlayed >= 9) {
       setPastGames((pastGames) => {
         if (pastGames.length > 0) {
           return [...pastGames, currentGameHistory];
@@ -260,7 +265,7 @@ export function App() {
 
       resetGame(true);
     }
-  }, [currentGameHistory, movesPlayed]);
+  }, [currentGameHistory, movesPlayed, winner]);
 
   useEffect(() => {
     localStorage.setItem("pastGames", JSON.stringify(pastGames));
@@ -292,8 +297,6 @@ export function App() {
         </div>
       </div>
     </div>
-    {movesPlayed >= 9 && winner === "" ? "No winner." : null}
-    {!isGameInProgress && winner !== "" ? <p style={{ textAlign: 'center' }}>{`${winner} has won.`}</p> : null}
     <button className={styles.secondaryButton} onClick={() => resetGame()}>{isGameInProgress ? "Reset game" : "Play again"}</button>
     <h2 style={{ marginBottom: 0 }}>Previous games</h2>
     <p style={{ margin: 0 }}>Click a game to show the moves played.</p>
