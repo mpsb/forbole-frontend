@@ -7,7 +7,9 @@
     "start": "parcel src/index.html",
     "build": "parcel build",
     "test": "jest",
-    "cy:test": "npx cypress run --spec './cypress/e2e/game.spec.cy.js'"
+    "cy:test": "npm run start && npx cypress run --spec './cypress/e2e/game.spec.cy.js'",
+    "predeploy": "rm -rf dist && parcel build ./*.html --public-url 'https://mpsb.github.io/tictactoe/'",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,7 @@
   },
   "homepage": "https://github.com/mpsb/forbole-frontend#readme",
   "dependencies": {
+    "gh-pages": "^6.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
