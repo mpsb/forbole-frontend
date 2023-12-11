@@ -12,6 +12,12 @@ jobs:
         run: npm install
       - name: Run jest tests
         run: npm run test
-      - name: Run Cypress tests
-        run: npm run cy:test
+      - name: Cypress run
+        uses: cypress-io/github-action@v3
+        with:
+          project: ./cypress
+          browser: chrome
+          build: npm run build
+          start: npm run start
+          wait-on: "http://localhost:1234"
   
