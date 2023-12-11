@@ -21,7 +21,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Install other dependencies for jest
         run: npm install
-      - name: Predeploy
-        run: npm run predeploy
       - name: Deploy
         run: npm run deploy

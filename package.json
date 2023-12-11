@@ -8,7 +8,7 @@
     "build": "parcel build",
     "test": "jest",
     "cy:test": "npm run start && npx cypress run --spec './cypress/e2e/game.spec.cy.js'",
-    "predeploy": "rm -rf dist && parcel build ./*.html --public-url 'https://mpsb.github.io/tictactoe/'",
+    "predeploy": "rm -rf dist && parcel build ./*.html --public-url 'https://mpsb.github.io/forbole-frontend/'",
     "deploy": "gh-pages -d dist"
   },
   "repository": {
