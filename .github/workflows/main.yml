@@ -19,5 +19,6 @@ jobs:
           browser: chrome
           build: npm run build
           start: npm run start
+          config-file: cypress.config.js
           wait-on: "http://localhost:1234"
   
