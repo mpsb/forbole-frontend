@@ -14,22 +14,4 @@ jobs:
         run: npm run test
       - name: Run Cypress tests
         run: npm run cy:test
-  deploy:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Configure git credentials
-        uses: OleksiyRudenko/gha-git-credentials@v2.1.1
-        with:
-          global: true
-          name: 'mpsb'
-          email: 'mps.bilo@gmail.com'
-          actor: 'mpsb'
-          token: '${{ secrets.GITHUB_TOKEN }}'
-      - name: Install dependencies
-        run: npm install
-      - name: Setup Github token URL 
-        run: git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-      - name: Deploy
-        run: npm run deploy
+  
