@@ -22,10 +22,14 @@ jobs:
       - name: Configure git credentials
         uses: OleksiyRudenko/gha-git-credentials@v2.1.1
         with:
+          global: true
+          name: 'mpsb'
+          email: 'mps.bilo@gmail.com'
+          actor: 'mpsb'
           token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Install dependencies
         run: npm install
-      - name: Setup Github credentials
-        run: git config --global user.email "mps.bilo@gmail.com" && git config --global user.name "mpsb"
+      # - name: Setup Github credentials
+      #   run: git config --global user.email "mps.bilo@gmail.com" && git config --global user.name "mpsb"
       - name: Deploy
         run: npm run deploy
