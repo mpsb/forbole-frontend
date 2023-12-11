@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/mpsb/forbole-frontend/issues"
   },
-  "homepage": "https://github.com/mpsb/forbole-frontend#readme",
+  "homepage": "https://mpsb.github.io/forbole-frontend",
   "dependencies": {
     "gh-pages": "^6.1.0",
     "react": "^18.2.0",
