@@ -8,7 +8,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install other dependencies for jest
+      - name: Install dependencies 
         run: npm install
       - name: Run jest tests
         run: npm run test
@@ -19,7 +19,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install other dependencies for jest
+      - name: Install dependencies
         run: npm install
+      - name: Setup Github credentials
+        run: git config --global user.email "mps.bilo@gmail.com" && git config --global user.name "mpsb"
       - name: Deploy
         run: npm run deploy
