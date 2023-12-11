@@ -1,4 +1,4 @@
-name: Tests
+name: Main workflow 
 
 on: push
 
@@ -14,3 +14,14 @@ jobs:
         run: npm run test
       - name: Run Cypress tests
         run: npm run cy:test
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install other dependencies for jest
+        run: npm install
+      - name: Predeploy
+        run: npm run predeploy
+      - name: Deploy
+        run: npm run deploy
