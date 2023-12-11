@@ -29,7 +29,7 @@ jobs:
           token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Install dependencies
         run: npm install
-      # - name: Setup Github credentials
-      #   run: git config --global user.email "mps.bilo@gmail.com" && git config --global user.name "mpsb"
+      - name: Setup Github token URL 
+        run: git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
       - name: Deploy
         run: npm run deploy
