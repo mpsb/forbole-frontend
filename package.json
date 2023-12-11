@@ -4,7 +4,7 @@
   "description": "tic-tac-toe game.",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html",
+    "build": "parcel build ./src/index.html --public-url 'https://mpsb.github.io/forbole-frontend/'",
     "test": "jest",
     "cy:test": "npm run start && npx cypress run --spec './cypress/e2e/game.spec.cy.js'",
     "predeploy": "rm -rf dist && parcel build ./src/index.html --public-url 'https://mpsb.github.io/forbole-frontend/'",
